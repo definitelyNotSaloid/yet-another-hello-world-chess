@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+}
 
 android {
     compileSdkVersion 32
@@ -7,12 +10,14 @@ android {
 
     defaultConfig {
         applicationId "com.etu.yahwChess"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = "true"
     }
 
     buildTypes {

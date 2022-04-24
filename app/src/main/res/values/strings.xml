@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">YetAnotherHelloWorldChess</string>
+    <string name="black_queen">Black Queen</string>
 </resources>
