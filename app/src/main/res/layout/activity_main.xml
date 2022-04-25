@@ -1,42 +1,457 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity"
-    >
+    tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/llTop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@android:color/darker_gray"
-        android:gravity="center"
-        android:layout_weight="1">
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="384dp"
+        android:layout_height="384dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/dragView"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:contentDescription="@string/black_queen"
-            app:srcCompat="@drawable/ic_black_queen"
-            tools:ignore="NestedWeights" />
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="placeholder"
+            app:srcCompat="@mipmap/board_full_foreground" />
 
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </LinearLayout>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/llBottom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="@android:color/holo_green_dark"
-        android:gravity="center"
-        android:layout_weight="1"/>
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewH1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
 
-</LinearLayout>
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewH2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewH3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewH4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewH5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewH6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewH7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewH8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewG1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewG2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewG3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewG4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewG5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewG6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewG7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewG8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewF1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewF2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewF3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewF4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewF5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewF6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewF7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewF8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewE1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewE2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewE3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewE4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewE5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewE6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewE7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewE8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewD1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewD2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewD3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewD4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewD5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewD6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewD7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewD8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewC1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewC2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewC3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewC4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewC5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewC6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewC7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewC8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewB1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewB2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewB3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewB4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewB5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewB6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewB7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewB8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="48dp">
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewA1"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewA2"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewA3"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewA4"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/pieceViewA5"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewA6"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewA7"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+
+                <com.etu.yahwChess.view.board.piece.PieceView
+                    android:id="@+id/cellViewA8"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@android:drawable/alert_dark_frame" />
+            </TableRow>
+
+        </TableLayout>
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
