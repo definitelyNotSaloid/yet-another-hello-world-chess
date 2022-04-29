@@ -1,5 +1,6 @@
 package com.etu.yahwChess.view.board.piece
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
@@ -11,13 +12,14 @@ import android.view.View
 import android.widget.ImageView
 import java.net.URI
 
-class PieceView @JvmOverloads constructor(
+class PieceView constructor(
     context: Context, attrs: AttributeSet?
 ) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
     init {
         this.setBackgroundColor(Color.WHITE)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return when (event?.action) {
             MotionEvent.ACTION_DOWN -> {
