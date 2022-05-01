@@ -4,12 +4,22 @@ import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
 
 // btw we dont care about le tru chessers and call pawn piece as well
-abstract class Piece(val board: BoardContainer, pos: Vector2dInt) {
+abstract class Piece(val board: BoardContainer) {
     init {
-        TODO("put this piece on the board. cant be done until BoardContainer is implemented")
+        //TODO("put this piece on the board. cant be done until BoardContainer is implemented")
     }
 
     val position : Vector2dInt
+        get() {
+            for (i in 0..7) {
+                for (j in 0..7){
+                    if (board[Vector2dInt(i,j)] == this)
+                        return Vector2dInt(i,j)
+                }
+            }
+
+            return Vector2dInt(-1,-1)
+        }
 
     abstract fun possibleMoves() : Sequence<Vector2dInt>
     // is it really needed? Useful for pieces like knight or pawn, but imagine using this method with queen
@@ -23,6 +33,12 @@ abstract class Piece(val board: BoardContainer, pos: Vector2dInt) {
 
 // debug only
 // all moves are possible
-// TODO class TestPiece(board: BoardContainer, pos: Vector2dInt) : PieceBase(board, pos) {
-//
-//}
+class TestPiece(board: BoardContainer) : Piece(board) {
+    override fun possibleMoves(): Sequence<Vector2dInt> {
+        TODO("Not yet implemented")
+    }
+
+    override fun canMoveTo(pos: Vector2dInt): Boolean {
+        TODO("Not yet implemented")
+    }
+}
