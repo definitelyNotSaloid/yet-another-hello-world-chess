@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 //        piece.setOnTouchListener(onTouchListener())
     }
 
-    @SuppressLint("ClickableViewAccessibility")
 //    private fun onTouchListener(): View.OnTouchListener {
 //        return View.OnTouchListener { view, event ->
 //            // position information
