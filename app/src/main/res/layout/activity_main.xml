@@ -35,7 +35,7 @@
         <!-- NOTE! cell index is always BEFORE any other stuff. Ie A1[CellName] -->
 
         <com.etu.yahwChess.view.board.piece.CellView
-            android:id="@+id/h1Cell63"
+            android:id="@+id/h1Cell"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:adjustViewBounds="false"

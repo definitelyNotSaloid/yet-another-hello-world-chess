@@ -23,12 +23,11 @@ class CellView constructor(
         set(value) {
             field = value
             if (value==null) {
-                visibility = View.INVISIBLE
+                setImageResource(R.mipmap.transparent_background)
             }
 
             else {
-                visibility = View.VISIBLE
-                setImageResource(R.drawable.ic_black_queen)
+                setImageResource(value.pieceData.textureResId)
             }
         }
 
@@ -74,14 +73,4 @@ class CellView constructor(
             this.invalidate()
             return true
     }
-
-
-    var active : Boolean = false
-        set(value) {
-            field = value
-            if (value)
-                this.setBackgroundColor(Color.BLACK)
-            else
-                this.setBackgroundColor(Color.WHITE)
-        }
 }

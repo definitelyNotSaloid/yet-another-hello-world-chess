@@ -14,6 +14,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 class BoardContainer {
     lateinit var game: CurrentGame
 
+    constructor(game: CurrentGame) {
+        this.game = game
+    }
+
     // Important: upper left corner is [0][0], lower right is [7][7]
     // and A1 is lower left, so A1 = [7][0]
     private val grid =  arrayListOf<ArrayList<Piece?>>(

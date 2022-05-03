@@ -13,10 +13,12 @@ data class Vector2dInt(var x: Int, var y: Int) {
     }
 
     companion object {
-        val NORTH = Vector2dInt(0, 1)
+        val NORTH = Vector2dInt(0, -1)
         val EAST = Vector2dInt(1, 0)
-        val SOUTH = Vector2dInt(0, -1)
+        val SOUTH = Vector2dInt(0, 1)
         val WEST = Vector2dInt(-1, 0)
+
+        val OUT_OF_BOUNDS = Vector2dInt(-1,-1)
     }
 
     override fun toString(): String {
@@ -25,5 +27,13 @@ data class Vector2dInt(var x: Int, var y: Int) {
 
     operator fun times(scalar: Int): Vector2dInt {
         return Vector2dInt(x * scalar, y * scalar)
+    }
+
+    // true if point is within specified rectangle, INCLUDING its borders
+    fun withinRectangle(upperLeft: Vector2dInt, lowerRight: Vector2dInt) : Boolean {
+        require(upperLeft.x <= lowerRight.x && upperLeft.y <= lowerRight.y)     // TODO some comment
+
+        return this.x in upperLeft.x..lowerRight.x
+                && this.y in upperLeft.y..lowerRight.y
     }
 }

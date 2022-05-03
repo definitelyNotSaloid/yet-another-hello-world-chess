@@ -27,9 +27,17 @@ class PieceMover(val boardContainer: BoardContainer) {
                 Log.println(Log.INFO, "PieceMover", "released piece by clicking on it again")
             }
             else {
-                boardContainer[pos] = piece
-                boardContainer[piecePos] = null
-                Log.println(Log.INFO, "PieceMover", "released piece at $pos")
+                // TODO something on piece capture (eg show captured pieces)
+
+                if (!piece!!.canMoveTo(pos)) {
+                    Log.println(Log.INFO, "PieceMover", "released piece by clicking on invalid cell")
+                }
+                else {
+                    boardContainer[pos] = piece
+                    boardContainer[piecePos] = null
+                    Log.println(Log.INFO, "PieceMover", "released piece at $pos")
+                }
+
                 piecePos = Vector2dInt(-1, -1)
                 piece = null
             }
