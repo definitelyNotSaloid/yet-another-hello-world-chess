@@ -27,9 +27,11 @@
 
     <GridLayout
         android:id="@+id/board"
-        android:layout_width="384dp"
+        android:layout_width="383dp"
         android:layout_height="384dp"
-        android:background="@mipmap/board_full_foreground">
+        android:background="@mipmap/board_full_foreground"
+        android:layout_gravity="center"
+        android:layout_marginBottom="60dp">
 
 
         <!-- NOTE! cell index is always BEFORE any other stuff. Ie A1[CellName] -->
@@ -636,5 +638,16 @@
             android:visibility="visible"
             app:srcCompat="?attr/selectableItemBackground" />
     </GridLayout>
+
+    <ImageButton
+        android:id="@+id/back_button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/back_button"
+        android:contentDescription="back_button"
+        tools:ignore="HardcodedText"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="?android:selectableItemBackground"/>
 
 </FrameLayout>

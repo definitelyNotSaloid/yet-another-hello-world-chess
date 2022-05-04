@@ -7,7 +7,6 @@ import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.misc.vectorToCellIndex
 import com.etu.yahwChess.model.pieces.Piece
-import kotlinx.android.synthetic.main.activity_main.*
 
 // Its just a data container
 // Any logic besides moving stuff should be implemented in PieceMover class

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.MainMenu"
+    android:background="@color/backgroundColor">
+
+    <!--<ImageView
+        android:id="@+id/imageView"
+        android:layout_width="95dp"
+        android:layout_height="106dp"
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/play_button"
+        app:srcCompat="@drawable/play_button_icon" />-->
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="25dp"
+        android:fontFamily="sans-serif-thin"
+        android:text="PLAY"
+        android:textSize="45sp"
+        tools:ignore="HardcodedText" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/play_button_icon_100dp"
+        tools:ignore="SpeakableTextPresentCheck"
+        android:background="?android:selectableItemBackground"/>
+</RelativeLayout>

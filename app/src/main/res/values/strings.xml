@@ -2,4 +2,5 @@
     <string name="app_name">YetAnotherHelloWorldChess</string>
     <string name="black_queen">Black Queen</string>
     <string name="placeholder">placeholder</string>
+    <string name="play_button">playButton</string>
 </resources>
