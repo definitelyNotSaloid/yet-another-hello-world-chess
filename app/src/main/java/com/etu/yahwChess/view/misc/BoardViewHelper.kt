@@ -1,15 +1,11 @@
-package com.etu.yahwChess.view
+package com.etu.yahwChess.view.misc
 
 import android.util.Log
-import android.util.Log.INFO
-import android.view.View
 import android.view.View.NO_ID
 import android.widget.GridLayout
-import android.widget.ImageView
 import androidx.core.view.children
 import com.etu.yahwChess.misc.cellIndexToVector
 import com.etu.yahwChess.view.board.piece.CellView
-import java.lang.Exception
 import java.lang.RuntimeException
 
 class BoardViewHelper(val boardView : GridLayout) {

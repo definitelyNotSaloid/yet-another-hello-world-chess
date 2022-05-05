@@ -1,11 +1,12 @@
 package com.etu.yahwChess.model.pieces
 
+import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
 import java.lang.RuntimeException
 
 // btw we dont care about le tru chessers and call pawn piece as well
-abstract class Piece(val board: BoardContainer) {
+abstract class Piece(val board: BoardContainer, val color: Player) {
     private var prevRegisteredPos : Vector2dInt = Vector2dInt.OUT_OF_BOUNDS
 
     abstract val pieceData : PieceData
@@ -40,7 +41,7 @@ abstract class Piece(val board: BoardContainer) {
 
 // debug only
 // all moves are possible
-class TestPiece(board: BoardContainer) : Piece(board) {
+class TestPiece(board: BoardContainer, color: Player) : Piece(board, color) {
     override val pieceData: PieceData
         get() = TODO("Not yet implemented")
 
@@ -53,7 +54,7 @@ class TestPiece(board: BoardContainer) : Piece(board) {
     }
 }
 
-class RookPiece(board: BoardContainer) : Piece(board) {
+class RookPiece(board: BoardContainer, color: Player) : Piece(board, color) {
     override val pieceData: PieceData
         get() = RookData
 
@@ -80,8 +81,12 @@ class RookPiece(board: BoardContainer) : Piece(board) {
                         yield(curPos)
                         curPos+=direction
 
-                        if (board[curPos]!=null)        // cant go past some piece
+                        if (board[curPos]!=null) {        // cant go past some piece
+                            if (board[curPos]?.color != color)      // can jump at cell with piece of opposite color
+                                yield(curPos)
+
                             break
+                        }
                     }
             }
         }
@@ -112,6 +117,10 @@ class RookPiece(board: BoardContainer) : Piece(board) {
                 return false
             curPos+=checkDirection
         }
+
+        // checking cell at destination
+        if (board[curPos]?.color == this.color)
+            return false
 
         return true
     }
