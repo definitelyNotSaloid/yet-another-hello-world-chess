@@ -1,7 +1,11 @@
 package com.etu.yahwChess.misc
 
+import kotlinx.serialization.Serializable
+
 // used for coordinates mostly
-data class Vector2dInt(var x: Int, var y: Int) {
+
+@Serializable
+data class Vector2dInt(val x: Int, val y: Int) {
     constructor() : this(0, 0)
 
     operator fun plus(other: Vector2dInt): Vector2dInt {

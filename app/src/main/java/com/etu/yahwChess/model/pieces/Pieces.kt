@@ -3,16 +3,35 @@ package com.etu.yahwChess.model.pieces
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.lang.RuntimeException
 
 // btw we dont care about le tru chessers and call pawn piece as well
-abstract class Piece(val board: BoardContainer, val color: Player) {
-    private var prevRegisteredPos : Vector2dInt = Vector2dInt.OUT_OF_BOUNDS
+@Serializable
+sealed class Piece protected constructor(
+    private var prevRegisteredPos: Vector2dInt,
+    val color: Player) {
+
+    @Transient
+    lateinit var board: BoardContainer
+    protected set // SINGLE USE ONLY
+
+    fun linkBoard(board: BoardContainer) {       // because we cant use custom setter on lateinit
+        if (this::board.isInitialized)
+            throw Exception()
+
+        this.board = board
+    }
 
     abstract val pieceData : PieceData
 
+    constructor(board: BoardContainer, color: Player) : this (Vector2dInt.OUT_OF_BOUNDS, color) {
+        this.board = board
+    }
+
     init {
-        val a = position            // updating position through getter
     }
 
     val position : Vector2dInt
@@ -54,7 +73,13 @@ class TestPiece(board: BoardContainer, color: Player) : Piece(board, color) {
     }
 }
 
-class RookPiece(board: BoardContainer, color: Player) : Piece(board, color) {
+@Serializable
+@SerialName("Rook")
+class RookPiece : Piece {
+    constructor(board: BoardContainer, color: Player): super(Vector2dInt.OUT_OF_BOUNDS, color) {
+        this.board = board
+    }
+
     override val pieceData: PieceData
         get() = RookData
 

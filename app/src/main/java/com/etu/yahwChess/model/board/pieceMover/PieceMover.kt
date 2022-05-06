@@ -6,9 +6,11 @@ import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.model.pieces.Piece
 
-class PieceMover(val boardContainer: BoardContainer,val game: CurrentGame) {
+class PieceMover(val game: CurrentGame) {
     private var piece: Piece? = null
     private var piecePos = Vector2dInt.OUT_OF_BOUNDS
+
+    private val boardContainer = game.boardContainer
 
     var lastMove : Move? = null
         private set

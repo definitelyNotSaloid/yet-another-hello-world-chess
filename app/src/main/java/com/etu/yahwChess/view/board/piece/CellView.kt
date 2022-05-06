@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import com.etu.yahwChess.R
+import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.cellIndexToVector
 import com.etu.yahwChess.model.board.container.BoardContainer
@@ -17,7 +18,8 @@ class CellView constructor(
 //    private var xDelta = 0
 //    private var yDelta = 0
 
-    lateinit var board : BoardContainer
+
+    lateinit var game: CurrentGame
 
     companion object {
         // TODO piece with this filter looks almost fine, but colors are a bit too sharp. Try and play with filter to make it look better
@@ -52,7 +54,7 @@ class CellView constructor(
 
 
     override fun performClick(): Boolean {
-        board.game.pieceMover.clickedAt(cellIndexToVector(cellIndex))
+        game.pieceMover.clickedAt(cellIndexToVector(cellIndex))
         Log.println(Log.INFO, "CellView", "touched $cellIndex")
         return super.performClick()
     }
