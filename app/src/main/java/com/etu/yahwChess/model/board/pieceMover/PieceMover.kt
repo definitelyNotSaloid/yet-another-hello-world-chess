@@ -25,7 +25,7 @@ class PieceMover(val game: CurrentGame) {
             }
         }
         else {
-            // Drop piece by doubleckicking
+            // Drop piece by doubleclicking
             if (piecePos==pos) {
                 piece = null
                 piecePos = Vector2dInt.OUT_OF_BOUNDS

@@ -15,9 +15,6 @@ import kotlinx.serialization.json.Json
 // Any logic besides moving stuff should be implemented in PieceMover class
 class BoardContainer(val game: CurrentGame) {
 
-
-
-
     // Important: upper left corner is [0][0], lower right is [7][7]
     // and A1 is lower left, so A1 = [7][0]
     private val grid =  arrayListOf<ArrayList<Piece?>>(

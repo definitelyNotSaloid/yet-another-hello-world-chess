@@ -1,12 +1,14 @@
 package com.etu.yahwChess
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Player
@@ -16,9 +18,6 @@ import com.etu.yahwChess.serialization.SerializableGameData
 import com.etu.yahwChess.view.MainMenu
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -33,20 +32,39 @@ class MainActivity : AppCompatActivity() {
 
         val game = CurrentGame(boardLayout as GridLayout)
 
-        try {
-            val input = applicationContext?.openFileInput("savedData.json")
-            if (input != null) {
-                val data = game.json.decodeFromStream<SerializableGameData>(input)
+        val bundle: Bundle = intent.extras!!
+        val gameStart = bundle.getBoolean("game_start")
 
-                game.loadData(data)
+        if (gameStart) {
+            try {
+                val input = applicationContext?.openFileInput("savedData.json")
+                if (input != null) {
+                    val data = game.json.decodeFromStream<SerializableGameData>(input)
+
+                    game.loadData(data)
+                }
+            } catch (e: Exception) {
+                // i miss silent fails
+                game.boardContainer[Vector2dInt(0, 0)] =
+                    RookPiece(game.boardContainer, Player.BLACK)
+                game.boardContainer[Vector2dInt(1, 1)] =
+                    RookPiece(game.boardContainer, Player.WHITE)
+                game.boardContainer[Vector2dInt(2, 2)] =
+                    RookPiece(game.boardContainer, Player.BLACK)
+                game.boardContainer[Vector2dInt(3, 3)] =
+                    RookPiece(game.boardContainer, Player.WHITE)
             }
         }
-        catch (e: Exception) {
-            // i miss silent fails
-            game.boardContainer[Vector2dInt(0, 0)] = RookPiece(game.boardContainer, Player.BLACK)
-            game.boardContainer[Vector2dInt(1, 1)] = RookPiece(game.boardContainer, Player.WHITE)
-            game.boardContainer[Vector2dInt(2, 2)] = RookPiece(game.boardContainer, Player.BLACK)
-            game.boardContainer[Vector2dInt(3, 3)] = RookPiece(game.boardContainer, Player.WHITE)
+        else {
+
+            game.boardContainer[Vector2dInt(0, 0)] =
+                RookPiece(game.boardContainer, Player.BLACK)
+            game.boardContainer[Vector2dInt(0, 7)] =
+                RookPiece(game.boardContainer, Player.WHITE)
+            game.boardContainer[Vector2dInt(7, 0)] =
+                RookPiece(game.boardContainer, Player.BLACK)
+            game.boardContainer[Vector2dInt(7, 7)] =
+                RookPiece(game.boardContainer, Player.WHITE)
         }
 
 
@@ -54,10 +72,31 @@ class MainActivity : AppCompatActivity() {
         val backButton: ImageButton = findViewById(R.id.back_button1)
 
         backButton.setOnClickListener {
-            val output = applicationContext?.openFileOutput("savedData.json", Context.MODE_PRIVATE)
-            output?.write(game.serialize().toByteArray())
+            val dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog_animation))
+            dialogBuilder.setTitle("Back to menu")
+                .setMessage("Do you want to save your game?")
 
-            openMenuActivity()
+                    //save the game
+                .setPositiveButton("Save") { dialogBuilder, which ->
+                    Toast.makeText(
+                        applicationContext,
+                        "GAME SAVED", Toast.LENGTH_SHORT
+                    ).show()
+                    val output = applicationContext?.openFileOutput("savedData.json", Context.MODE_PRIVATE)
+                    output?.write(game.serialize().toByteArray())
+
+                    openMenuActivity()
+                }
+                    //don't save the game
+                .setNegativeButton("Don't save") { dialogBuilder, which ->
+                    Toast.makeText(
+                        applicationContext,
+                        "GAME NOT SAVED", Toast.LENGTH_SHORT
+                    ).show()
+
+                    openMenuActivity()
+                }
+            dialogBuilder.show()
         }
     }
 

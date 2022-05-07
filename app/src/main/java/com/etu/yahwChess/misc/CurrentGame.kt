@@ -22,10 +22,10 @@ class CurrentGame(val boardView : GridLayout) {
     val boardViewHelper = BoardViewHelper(boardView)
     val pieceMover = PieceMover(this)
     val gameObserver = GameObserver(this)
-    var turn: Player        = Player.WHITE
+    var turn: Player = Player.WHITE
         private set
 
-    var state: GameState    = GameState.PLAYING
+    var state: GameState = GameState.PLAYING
     private set
 
     val json: Json by lazy { Json{
