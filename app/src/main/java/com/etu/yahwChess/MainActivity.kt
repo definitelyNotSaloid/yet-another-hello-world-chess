@@ -20,6 +20,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
 
 
+@Suppress("OPT_IN_IS_NOT_ENABLED")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var boardLayout: ViewGroup
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 .setMessage("Do you want to save your game?")
 
                     //save the game
-                .setPositiveButton("Save") { dialogBuilder, which ->
+                .setPositiveButton("Save") { _, _ ->
                     Toast.makeText(
                         applicationContext,
                         "GAME SAVED", Toast.LENGTH_SHORT
@@ -88,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                     openMenuActivity()
                 }
                     //don't save the game
-                .setNegativeButton("Don't save") { dialogBuilder, which ->
+                .setNegativeButton("Don't save") { _, _ ->
                     Toast.makeText(
                         applicationContext,
                         "GAME NOT SAVED", Toast.LENGTH_SHORT
