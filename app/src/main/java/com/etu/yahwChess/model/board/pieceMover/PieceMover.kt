@@ -1,12 +1,15 @@
 package com.etu.yahwChess.model.board.pieceMover
 
+import android.text.BoringLayout
 import android.util.Log
+import android.widget.ImageView
 import com.etu.yahwChess.R
 import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.misc.vectorToCellIndex
 import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.model.pieces.Piece
+import com.etu.yahwChess.model.pieces.PieceData
 
 class PieceMover(val game: CurrentGame) {
     private var piece: Piece? = null
@@ -29,19 +32,18 @@ class PieceMover(val game: CurrentGame) {
                 firstPieceTouchedPos = piecePos
                 firstPieceTouched = piece
 
-                game.boardViewHelper.getCellView(vectorToCellIndex(firstPieceTouchedPos))
-                    .setBackgroundResource(R.mipmap.selection_background)
-
-                firstPieceTouched!!.possibleMoves().forEach {
-                    game.boardViewHelper.getCellView(vectorToCellIndex(it))
-                        .setBackgroundResource(R.mipmap.possible_moves)
-                }
+                setBackgroundToPossibleMoves(piece, true)
+                setBackgroundToTouchedPiece(firstPieceTouchedPos, true)
 
                 Log.println(Log.INFO, "PieceMover", "taken piece at $pos")
             }
         } else {
             // Drop piece by doubleclicking
             if (piecePos == pos) {
+
+                setBackgroundToPossibleMoves(piece, false)
+                setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
+
                 piece = null
                 piecePos = Vector2dInt.OUT_OF_BOUNDS
                 Log.println(Log.INFO, "PieceMover", "released piece by clicking on it again")
@@ -53,23 +55,14 @@ class PieceMover(val game: CurrentGame) {
                 piecePos = pos
                 piece = boardContainer[pos]!!           // assert null just in case
 
-                //тут крашит
-                firstPieceTouched!!.possibleMoves().forEach {
-                    game.boardViewHelper.getCellView(vectorToCellIndex(it))
-                        .setBackgroundResource(R.mipmap.transparent_background)
-                }
-                piece!!.possibleMoves().forEach {
-                    game.boardViewHelper.getCellView(vectorToCellIndex(it))
-                        .setBackgroundResource(R.mipmap.possible_moves)
-                }
-                firstPieceTouched = piece
-                //
+                setBackgroundToPossibleMoves(firstPieceTouched, false)
+                setBackgroundToPossibleMoves(piece, true)
 
-                game.boardViewHelper.getCellView(vectorToCellIndex(firstPieceTouchedPos))
-                    .setBackgroundResource(R.mipmap.transparent_background)
-                game.boardViewHelper.getCellView(vectorToCellIndex(piecePos))
-                    .setBackgroundResource(R.mipmap.selection_background)
+                setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
+                setBackgroundToTouchedPiece(piecePos, true)
+
                 firstPieceTouchedPos = piecePos
+                firstPieceTouched = piece
 
                 Log.println(
                     Log.INFO,
@@ -85,14 +78,12 @@ class PieceMover(val game: CurrentGame) {
                 boardContainer[pos] = piece
                 boardContainer[piecePos] = null
 
-                firstPieceTouched!!.possibleMoves().forEach {
-                    game.boardViewHelper.getCellView(vectorToCellIndex(it))
-                        .setBackgroundResource(R.mipmap.transparent_background)
+                for (i in 0..7) {
+                    for (j in 0..7) {
+                        game.boardViewHelper.getCellView(vectorToCellIndex(Vector2dInt(i, j)))
+                            .setBackgroundResource(R.mipmap.transparent_background)
+                    }
                 }
-                //
-
-                game.boardViewHelper.getCellView(vectorToCellIndex(firstPieceTouchedPos))
-                    .setBackgroundResource(R.mipmap.transparent_background)
 
                 Log.println(Log.INFO, "PieceMover", "released piece at $pos")
 
@@ -105,10 +96,37 @@ class PieceMover(val game: CurrentGame) {
             }
 
             // Default case - invalid cell
+            setBackgroundToPossibleMoves(piece, false)
+            setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
+
             Log.println(Log.INFO, "PieceMover", "released piece by clicking on invalid cell")
             piecePos = Vector2dInt(-1, -1)
             piece = null
 
+        }
+    }
+
+    private fun setBackgroundToPossibleMoves(piece: Piece?, show: Boolean) {
+        if (show) {
+            piece!!.possibleMoves().forEach {
+                game.boardViewHelper.getCellView(vectorToCellIndex(it))
+                    .setBackgroundResource(R.mipmap.possible_moves)
+            }
+        } else {
+            piece!!.possibleMoves().forEach {
+                game.boardViewHelper.getCellView(vectorToCellIndex(it))
+                    .setBackgroundResource(R.mipmap.transparent_background)
+            }
+        }
+    }
+
+    private fun setBackgroundToTouchedPiece(piecePos: Vector2dInt, show: Boolean) {
+        if (show) {
+            game.boardViewHelper.getCellView(vectorToCellIndex(piecePos))
+                .setBackgroundResource(R.mipmap.selection_background)
+        } else {
+            game.boardViewHelper.getCellView(vectorToCellIndex(piecePos))
+                .setBackgroundResource(R.mipmap.transparent_background)
         }
     }
 }
