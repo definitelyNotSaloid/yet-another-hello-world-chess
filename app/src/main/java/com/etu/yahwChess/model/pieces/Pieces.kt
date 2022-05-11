@@ -1,5 +1,6 @@
 package com.etu.yahwChess.model.pieces
 
+import android.util.Log
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
@@ -102,16 +103,18 @@ class RookPiece : Piece {
                 Vector2dInt.NORTH,
                 Vector2dInt.SOUTH)) {
                     curPos = startingPos + direction
-                    while (curPos.withinRectangle(upperLeft, lowerRight)) {
-                        yield(curPos)
-                        curPos+=direction
 
+                    while (curPos.withinRectangle(upperLeft, lowerRight)) {
                         if (board[curPos]!=null) {        // cant go past some piece
                             if (board[curPos]?.color != color)      // can jump at cell with piece of opposite color
                                 yield(curPos)
 
                             break
                         }
+
+
+                        yield(curPos)
+                        curPos+=direction
                     }
             }
         }

@@ -85,7 +85,6 @@ class PieceMover(val game: CurrentGame) {
                 boardContainer[pos] = piece
                 boardContainer[piecePos] = null
 
-                //и тут крашит
                 firstPieceTouched!!.possibleMoves().forEach {
                     game.boardViewHelper.getCellView(vectorToCellIndex(it))
                         .setBackgroundResource(R.mipmap.transparent_background)

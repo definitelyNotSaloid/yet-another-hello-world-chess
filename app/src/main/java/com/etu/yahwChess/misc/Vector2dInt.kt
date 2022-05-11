@@ -1,5 +1,6 @@
 package com.etu.yahwChess.misc
 
+import android.util.Log
 import kotlinx.serialization.Serializable
 
 // used for coordinates mostly
@@ -36,6 +37,9 @@ data class Vector2dInt(val x: Int, val y: Int) {
     // true if point is within specified rectangle, INCLUDING its borders
     fun withinRectangle(upperLeft: Vector2dInt, lowerRight: Vector2dInt) : Boolean {
         require(upperLeft.x <= lowerRight.x && upperLeft.y <= lowerRight.y)     // TODO some comment
+
+//        Log.println(Log.INFO, "vector2dInt", "$this within $upperLeft and $lowerRight is ${this.x in upperLeft.x..lowerRight.x
+//                && this.y in upperLeft.y..lowerRight.y}")
 
         return this.x in upperLeft.x..lowerRight.x
                 && this.y in upperLeft.y..lowerRight.y
