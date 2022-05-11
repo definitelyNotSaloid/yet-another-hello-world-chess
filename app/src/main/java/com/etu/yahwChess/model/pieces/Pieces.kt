@@ -11,7 +11,7 @@ import java.lang.RuntimeException
 
 // btw we dont care about le tru chessers and call pawn piece as well
 @Serializable
-sealed class Piece protected constructor(
+sealed class Piece(
     private var prevRegisteredPos: Vector2dInt,
     val color: Player) {
 
@@ -140,7 +140,7 @@ class RookPiece : Piece {
         }
 
         var curPos = position + checkDirection
-        while (pos.x != curPos.x) {
+        while (pos != curPos) {
             if (board[curPos] != null)
                 return false
             curPos+=checkDirection
