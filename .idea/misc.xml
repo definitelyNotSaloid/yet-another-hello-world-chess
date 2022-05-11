@@ -8,12 +8,14 @@
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/drawable/dialog_menu_background.xml" value="0.3245" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/drawable/ic_black_queen.xml" value="0.219" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/drawable/ic_launcher_background.xml" value="0.219" />
+        <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/drawable/ic_rook_background.xml" value="0.3245" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/drawable/play_botton_background.xml" value="0.3245" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/layout/activity_main_menu.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/layout/quit_dialog_menu.xml" value="0.3120471014492754" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/mipmap-anydpi-v26/board_full.xml" value="0.219" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.219" />
+        <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/mipmap-anydpi-v26/ic_rook.xml" value="0.3245" />
         <entry key="..\:/Users/evgen/AndroidStudioProjects/yet-another-hello-world-chess/app/src/main/res/mipmap-anydpi-v26/play_botton.xml" value="0.3245" />
         <entry key="..\:/wedro/yahwChess/app/src/main/res/layout/activity_main.xml" value="0.1716485507246377" />
       </map>

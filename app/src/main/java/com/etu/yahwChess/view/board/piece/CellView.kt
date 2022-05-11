@@ -54,8 +54,8 @@ class CellView constructor(
 
 
     override fun performClick(): Boolean {
-        game.pieceMover.clickedAt(cellIndexToVector(cellIndex))
         Log.println(Log.INFO, "CellView", "touched $cellIndex")
+        game.pieceMover.clickedAt(cellIndexToVector(cellIndex))
         return super.performClick()
     }
 
