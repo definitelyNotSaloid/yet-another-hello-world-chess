@@ -45,27 +45,12 @@ class MainActivity : AppCompatActivity() {
                     game.loadData(data)
                 }
             } catch (e: Exception) {
-                // i miss silent fails
-                game.boardContainer[Vector2dInt(0, 0)] =
-                    RookPiece(game.boardContainer, Player.BLACK)
-                game.boardContainer[Vector2dInt(1, 1)] =
-                    RookPiece(game.boardContainer, Player.WHITE)
-                game.boardContainer[Vector2dInt(2, 2)] =
-                    RookPiece(game.boardContainer, Player.BLACK)
-                game.boardContainer[Vector2dInt(3, 3)] =
-                    RookPiece(game.boardContainer, Player.WHITE)
+                game.boardContainer.emplacePiecesDefault()
             }
         }
         else {
 
-            game.boardContainer[Vector2dInt(0, 0)] =
-                RookPiece(game.boardContainer, Player.BLACK)
-            game.boardContainer[Vector2dInt(0, 7)] =
-                RookPiece(game.boardContainer, Player.WHITE)
-            game.boardContainer[Vector2dInt(7, 0)] =
-                RookPiece(game.boardContainer, Player.BLACK)
-            game.boardContainer[Vector2dInt(7, 7)] =
-                RookPiece(game.boardContainer, Player.WHITE)
+            game.boardContainer.emplacePiecesDefault()
         }
 
 
