@@ -75,6 +75,7 @@ class BoardContainer(val game: CurrentGame) {
         }
     }
 
+
     fun serialize() : String {
         return game.json.encodeToString(this.grid.flatten())
     }

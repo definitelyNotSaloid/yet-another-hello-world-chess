@@ -68,6 +68,7 @@ sealed class Piece(
 
         return true
     }
+
 }
 
 // debug only
@@ -79,6 +80,7 @@ class TestPiece(board: BoardContainer, color: Player) : Piece(board, color) {
     override fun possibleMoves(): Sequence<Vector2dInt> {
         TODO("Not yet implemented")
     }
+
 }
 
 @Serializable
@@ -156,6 +158,7 @@ class RookPiece : Piece {
 
         return true
     }
+
 }
 
 @Serializable
@@ -231,6 +234,7 @@ class BishopPiece : Piece {
 
         return true
     }
+
 }
 
 @Serializable
@@ -312,6 +316,7 @@ class QueenPiece : Piece {
 
         return true
     }
+
 }
 
 @Serializable
@@ -364,6 +369,7 @@ class KnightPiece : Piece {
 
         return false
     }
+
 }
 
 @Serializable
@@ -389,21 +395,21 @@ class KingPiece : Piece {
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
         val positions = listOf(
-            Vector2dInt(1,0) + this.position,
-            Vector2dInt(1,1) + this.position,
-            Vector2dInt(0,1) + this.position,
-            Vector2dInt(-1,1) + this.position,
-            Vector2dInt(-1,0) + this.position,
-            Vector2dInt(-1,-1) + this.position,
-            Vector2dInt(0,-1) + this.position,
-            Vector2dInt(1,-1) + this.position,
+            Vector2dInt(1, 0) + this.position,
+            Vector2dInt(1, 1) + this.position,
+            Vector2dInt(0, 1) + this.position,
+            Vector2dInt(-1, 1) + this.position,
+            Vector2dInt(-1, 0) + this.position,
+            Vector2dInt(-1, -1) + this.position,
+            Vector2dInt(0, -1) + this.position,
+            Vector2dInt(1, -1) + this.position,
         )
 
         return sequence {
             for (potentialPos in positions) {
                 // TODO guess what? threat check.
 
-                if (potentialPos.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7))) {
+                if (potentialPos.withinRectangle(Vector2dInt(0, 0), Vector2dInt(7, 7))) {
                     if (board[potentialPos] == null || board[potentialPos]?.color != color)
                         yield(potentialPos)
                 }
@@ -425,7 +431,7 @@ class PawnPiece : Piece {
     override fun possibleMoves(): Sequence<Vector2dInt> {
         val forwardDirection = if (color == Player.WHITE) Vector2dInt.NORTH else Vector2dInt.SOUTH
         val diagonalShifts : List<Vector2dInt> =
-            if (color == Player.WHITE) {
+            (if (color == Player.WHITE) {
                 listOf(
                     Vector2dInt.NORTH + Vector2dInt.WEST,
                     Vector2dInt.NORTH + Vector2dInt.EAST)
@@ -434,7 +440,9 @@ class PawnPiece : Piece {
                 listOf(
                     Vector2dInt.SOUTH + Vector2dInt.WEST,
                     Vector2dInt.SOUTH + Vector2dInt.EAST)
-            }
+            }).filter { it.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7)) }
+
+
         val startingLine = if (color == Player.WHITE) 6 else 1
 
         return sequence {
