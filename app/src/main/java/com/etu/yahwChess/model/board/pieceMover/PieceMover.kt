@@ -34,6 +34,7 @@ class PieceMover(val game: CurrentGame) {
 
                 setBackgroundToPossibleMoves(piece, true)
                 setBackgroundToTouchedPiece(firstPieceTouchedPos, true)
+                setBackgroundToPossibleEatenPawn(piece)
 
                 Log.println(Log.INFO, "PieceMover", "taken piece at $pos")
             }
@@ -57,6 +58,7 @@ class PieceMover(val game: CurrentGame) {
 
                 setBackgroundToPossibleMoves(firstPieceTouched, false)
                 setBackgroundToPossibleMoves(piece, true)
+                setBackgroundToPossibleEatenPawn(piece)
 
                 setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
                 setBackgroundToTouchedPiece(piecePos, true)
@@ -106,6 +108,7 @@ class PieceMover(val game: CurrentGame) {
         }
     }
 
+    //highlight possible moves
     private fun setBackgroundToPossibleMoves(piece: Piece?, show: Boolean) {
         if (show) {
             piece!!.possibleMoves().forEach {
@@ -120,6 +123,7 @@ class PieceMover(val game: CurrentGame) {
         }
     }
 
+    //highlight clicked pawn
     private fun setBackgroundToTouchedPiece(piecePos: Vector2dInt, show: Boolean) {
         if (show) {
             game.boardViewHelper.getCellView(vectorToCellIndex(piecePos))
@@ -128,5 +132,15 @@ class PieceMover(val game: CurrentGame) {
             game.boardViewHelper.getCellView(vectorToCellIndex(piecePos))
                 .setBackgroundResource(R.mipmap.transparent_background)
         }
+    }
+
+    //highlight a pawn that can be eaten
+    private fun setBackgroundToPossibleEatenPawn(piece: Piece?) {
+            piece!!.possibleMoves().forEach {
+                if (boardContainer[it]?.color != piece.color && boardContainer[it] != null) {
+                    game.boardViewHelper.getCellView(vectorToCellIndex(it))
+                        .setBackgroundResource(R.mipmap.eat)
+                }
+            }
     }
 }
