@@ -34,13 +34,11 @@ sealed class Piece(
     }
 
     // this predicate only works if checkmate state is can cover with single piece (or smth like that)
-    protected val willCoverKingOrEliminateThreatPredicate : (Vector2dInt) -> Boolean = {
-        cell ->
+    protected fun willCoverKingOrEliminateThreatPredicate (cell:Vector2dInt): Boolean {
         val observer = board.game.gameObserver
 
-            observer.kingThreatNullifiedByObstacleAt(cell, color)!=null
+            return observer.kingThreatNullifiedByObstacleAt(cell, color)!=null
             || observer.targetedBy(observer.kingOfColor(color).position).first { it.color != color }.position == cell
-
     }
 
     init {

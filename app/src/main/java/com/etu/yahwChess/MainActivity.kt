@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.ContextThemeWrapper
+import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageButton
@@ -11,11 +12,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.etu.yahwChess.misc.CurrentGame
+import com.etu.yahwChess.misc.GameState
 import com.etu.yahwChess.misc.Player
-import com.etu.yahwChess.misc.Vector2dInt
-import com.etu.yahwChess.model.pieces.RookPiece
+import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.serialization.SerializableGameData
 import com.etu.yahwChess.view.MainMenu
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
 
@@ -59,7 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         backButton.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog_animation))
-            dialogBuilder.setTitle("Back to menu")
+            dialogBuilder
+                .setTitle("Back to menu")
                 .setMessage("Do you want to save your game?")
 
                     //save the game
@@ -90,5 +93,32 @@ class MainActivity : AppCompatActivity() {
     private fun openMenuActivity() {
         val intent = Intent(this, MainMenu::class.java)
         startActivity(intent)
+    }
+
+    fun showWinnerAlert(state: GameState) {
+
+        when (state) {
+            GameState.BLACK_WINS -> {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("GAME OVER!")
+                    .setMessage("Team BLACK won")
+                    .setPositiveButton("MENU") {_, _ -> openMenuActivity()}
+                    .show()
+            }
+            GameState.WHITE_WINS -> {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("GAME OVER!")
+                    .setMessage("Team WHITE won")
+                    .setPositiveButton("MENU") { _, _ -> openMenuActivity()}
+                    .show()
+            }
+            GameState.DRAW-> {
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("GAME OVER!")
+                    .setMessage("DRAW")
+                    .setPositiveButton("MENU") { _, _ -> openMenuActivity()}
+                    .show()
+            }
+        }
     }
 }

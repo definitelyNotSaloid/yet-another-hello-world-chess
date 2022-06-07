@@ -1,8 +1,10 @@
 package com.etu.yahwChess.misc
 
+import android.media.tv.TvInputService
 import android.util.Log
 import android.widget.GridLayout
 import androidx.core.view.children
+import com.etu.yahwChess.MainActivity
 import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.model.board.pieceMover.PieceMover
 import com.etu.yahwChess.model.gameRules.GameObserver
@@ -21,6 +23,7 @@ class CurrentGame(val boardView : GridLayout) {
     val boardViewHelper = BoardViewHelper(boardView)
     val pieceMover = PieceMover(this)
     val gameObserver = GameObserver(this)
+    val activity = MainActivity()
     var turn: Player = Player.WHITE
         private set
 
@@ -44,13 +47,20 @@ class CurrentGame(val boardView : GridLayout) {
         turn = if (turn == Player.WHITE) Player.BLACK else Player.WHITE
         state = gameObserver.hardVictoryCheck()
         when (state) {        // TODO replace with soft check when it will be implemented
-            GameState.BLACK_WINS -> Log.println(Log.INFO, "GameObserver", "Registered BLACK victory")
-            GameState.WHITE_WINS -> Log.println(Log.INFO, "GameObserver", "Registered WHITE victory")
+            GameState.BLACK_WINS -> {
+                Log.println(Log.INFO, "GameObserver", "Registered BLACK victory")
+                //activity.showWinnerAlert(state)
+            }
+            GameState.WHITE_WINS -> {
+                Log.println(Log.INFO, "GameObserver", "Registered WHITE victory")
+                //activity.showWinnerAlert(state)
+            }
             GameState.DRAW -> Log.println(Log.INFO, "GameObserver", "Registered DRAW")
             else -> Log.println(Log.INFO, "GameObserver", "Game continues")
 
             // TODO some victory/draw visualisation
         }
+        //activity.showWinnerAlert(state)
 
         Log.println(Log.INFO, "CurrentGame", "passed turn. Its $turn turn now")
     }
