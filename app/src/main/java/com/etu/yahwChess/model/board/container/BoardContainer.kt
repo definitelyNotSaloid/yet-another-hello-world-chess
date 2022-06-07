@@ -36,6 +36,8 @@ class BoardContainer(val game: CurrentGame) {
         game.boardViewHelper.getCellView(vectorToCellIndex(pos)).piece = piece
     }
 
+    fun isWithinBorders(cell: Vector2dInt) = cell.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7))
+
     fun emplacePiecesDefault() {
         for (x in 0..7) {
             this[Vector2dInt(x,1)] = PawnPiece(this, Player.BLACK)
@@ -74,7 +76,6 @@ class BoardContainer(val game: CurrentGame) {
                 game.boardViewHelper.getCellView(vectorToCellIndex(Vector2dInt(i%8, i/8))).piece = grid[i/8][i%8]
         }
     }
-
 
     fun serialize() : String {
         return game.json.encodeToString(this.grid.flatten())

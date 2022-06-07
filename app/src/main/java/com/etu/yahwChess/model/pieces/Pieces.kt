@@ -3,6 +3,7 @@ package com.etu.yahwChess.model.pieces
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
+import com.etu.yahwChess.model.gameRules.HowBadThingsReallyAre
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -30,6 +31,16 @@ sealed class Piece(
 
     constructor(board: BoardContainer, color: Player) : this (Vector2dInt.OUT_OF_BOUNDS, color) {
         this.board = board
+    }
+
+    // this predicate only works if checkmate state is can cover with single piece (or smth like that)
+    protected val willCoverKingOrEliminateThreatPredicate : (Vector2dInt) -> Boolean = {
+        cell ->
+        val observer = board.game.gameObserver
+
+            observer.kingThreatNullifiedByObstacleAt(cell, color)!=null
+            || observer.targetedBy(observer.kingOfColor(color).position).first { it.color != color }.position == cell
+
     }
 
     init {
@@ -66,19 +77,24 @@ sealed class Piece(
         if (pos == this.position)
             return false
 
+        val checkThreat = board.game.gameObserver.checkmateState()
+        if (checkThreat == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
+            return false
+
+        else if (checkThreat == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+            val observer = board.game.gameObserver
+
+            val threat = observer.kingThreatNullifiedByObstacleAt(position, this.color)
+            if (threat != null)
+                return false
+
+            if (willCoverKingOrEliminateThreatPredicate(pos))
+                return true
+
+            return false
+        }
+
         return true
-    }
-
-}
-
-// debug only
-// all moves are possible
-class TestPiece(board: BoardContainer, color: Player) : Piece(board, color) {
-    override val pieceData: PieceData
-        get() = TODO("Not yet implemented")
-
-    override fun possibleMoves(): Sequence<Vector2dInt> {
-        TODO("Not yet implemented")
     }
 
 }
@@ -95,6 +111,19 @@ class RookPiece : Piece {
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
         if (position == Vector2dInt.OUT_OF_BOUNDS)
+            return sequence {  }
+
+        val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
+        if (threat!=null) {
+            if (canMoveTo(threat.position))
+                return sequenceOf(threat.position)
+
+            return sequence {  }
+        }
+
+        val checkState = board.game.gameObserver.checkmateState()
+
+        if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
             return sequence {  }
 
         return sequence {
@@ -126,6 +155,12 @@ class RookPiece : Piece {
                         curPos+=direction
                     }
             }
+        }.filter {
+            if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+                willCoverKingOrEliminateThreatPredicate(it)
+            }
+            else
+                true
         }
     }
 
@@ -172,6 +207,19 @@ class BishopPiece : Piece {
         get() = BishopData
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
+        val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
+        if (threat!=null) {
+            if (canMoveTo(threat.position))
+                return sequenceOf(threat.position)
+
+            return sequence {  }
+        }
+
+        val checkState = board.game.gameObserver.checkmateState()
+
+        if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
+            return sequence {  }
+
         val directions = listOf(
             Vector2dInt(-1,-1),
             Vector2dInt(1,-1),
@@ -179,7 +227,7 @@ class BishopPiece : Piece {
             Vector2dInt(1,1)
         )
 
-        return sequence {
+        return sequence<Vector2dInt> {
             val upperLeft = Vector2dInt(0,0)
             val lowerRight = Vector2dInt(7,7)
             val startingPos = position
@@ -200,6 +248,12 @@ class BishopPiece : Piece {
                     curPos+=direction
                 }
             }
+        }.filter {
+            if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+                willCoverKingOrEliminateThreatPredicate(it)
+            }
+            else
+                true
         }
     }
 
@@ -248,6 +302,19 @@ class QueenPiece : Piece {
         get() = QueenData
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
+        val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
+        if (threat!=null) {
+            if (canMoveTo(threat.position))
+                return sequenceOf(threat.position)
+
+            return sequence {  }
+        }
+
+        val checkState = board.game.gameObserver.checkmateState()
+
+        if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
+            return sequence {  }
+
         val directions = listOf(
             Vector2dInt(-1,-1),
             Vector2dInt(1,-1),
@@ -280,6 +347,12 @@ class QueenPiece : Piece {
                     curPos+=direction
                 }
             }
+        }.filter {
+            if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+                willCoverKingOrEliminateThreatPredicate(it)
+            }
+            else
+                true
         }
     }
 
@@ -329,7 +402,19 @@ class KnightPiece : Piece {
     override val pieceData: PieceData
         get() = KnightData
 
+
+
     override fun possibleMoves(): Sequence<Vector2dInt> {
+        val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
+        if (threat!=null) {
+            return sequence {  }
+        }
+
+        val checkState = board.game.gameObserver.checkmateState()
+
+        if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
+            return sequence {  }
+
         val positions = listOf(
             Vector2dInt(2,1) + this.position,
             Vector2dInt(1,2) + this.position,
@@ -348,6 +433,12 @@ class KnightPiece : Piece {
                         yield(potentialPos)
                 }
             }
+        }.filter {
+            if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+                willCoverKingOrEliminateThreatPredicate(it)
+            }
+            else
+                true
         }
     }
 
@@ -383,11 +474,19 @@ class KingPiece : Piece {
         get() = KingData
 
     override fun canMoveTo(pos: Vector2dInt): Boolean {
-        if (!super.canMoveTo(pos))
+        require(pos.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7)))
+        { "position $pos is out of board borders" }
+
+        if (this.position == Vector2dInt.OUT_OF_BOUNDS)
             return false
 
-        // TODO check... check. yeah. checkmate check. king threat check. sneaky bastards aiming for king check. проверка шаха короче
+        if (pos == this.position)
+            return false
+
         if (abs(pos.x - this.position.x) >1 || abs(pos.y - this.position.y) >1)
+            return false
+
+        if (board.game.gameObserver.targetedBy(pos).any { it.color != this.color } )
             return false
 
         return true
@@ -407,9 +506,9 @@ class KingPiece : Piece {
 
         return sequence {
             for (potentialPos in positions) {
-                // TODO guess what? threat check.
 
-                if (potentialPos.withinRectangle(Vector2dInt(0, 0), Vector2dInt(7, 7))) {
+                if (!board.game.gameObserver.targetedBy(potentialPos).any { it.color != color} &&
+                    potentialPos.withinRectangle(Vector2dInt(0, 0), Vector2dInt(7, 7))) {
                     if (board[potentialPos] == null || board[potentialPos]?.color != color)
                         yield(potentialPos)
                 }
@@ -429,6 +528,19 @@ class PawnPiece : Piece {
         get() = PawnData
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
+        val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
+        if (threat!=null) {
+            if (canMoveTo(threat.position))
+                return sequenceOf(threat.position)
+
+            return sequence {  }
+        }
+
+        val checkState = board.game.gameObserver.checkmateState()
+
+        if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
+            return sequence {  }
+
         val forwardDirection = if (color == Player.WHITE) Vector2dInt.NORTH else Vector2dInt.SOUTH
         val diagonalShifts : List<Vector2dInt> =
             (if (color == Player.WHITE) {
@@ -440,7 +552,7 @@ class PawnPiece : Piece {
                 listOf(
                     Vector2dInt.SOUTH + Vector2dInt.WEST,
                     Vector2dInt.SOUTH + Vector2dInt.EAST)
-            }).filter { it.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7)) }
+            }).filter { board.isWithinBorders(it + this.position) }
 
 
         val startingLine = if (color == Player.WHITE) 6 else 1
@@ -459,6 +571,12 @@ class PawnPiece : Piece {
                 )
                     yield(position + shift)
             }
+        }.filter {
+            if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
+                willCoverKingOrEliminateThreatPredicate(it)
+            }
+            else
+                true
         }
     }
 

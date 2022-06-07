@@ -8,7 +8,6 @@ import com.etu.yahwChess.model.board.pieceMover.PieceMover
 import com.etu.yahwChess.model.gameRules.GameObserver
 import com.etu.yahwChess.model.pieces.Piece
 import com.etu.yahwChess.model.pieces.RookPiece
-import com.etu.yahwChess.model.pieces.TestPiece
 import com.etu.yahwChess.serialization.SerializableGameData
 import com.etu.yahwChess.view.misc.BoardViewHelper
 import com.etu.yahwChess.view.board.piece.CellView
@@ -42,6 +41,7 @@ class CurrentGame(val boardView : GridLayout) {
     // TODO move somewhere else (?)
     // this is a proxy class after all
     fun passTurn() {
+        turn = if (turn == Player.WHITE) Player.BLACK else Player.WHITE
         state = gameObserver.hardVictoryCheck()
         when (state) {        // TODO replace with soft check when it will be implemented
             GameState.BLACK_WINS -> Log.println(Log.INFO, "GameObserver", "Registered BLACK victory")
@@ -52,8 +52,6 @@ class CurrentGame(val boardView : GridLayout) {
             // TODO some victory/draw visualisation
         }
 
-
-        turn = if (turn == Player.WHITE) Player.BLACK else Player.WHITE
         Log.println(Log.INFO, "CurrentGame", "passed turn. Its $turn turn now")
     }
 
