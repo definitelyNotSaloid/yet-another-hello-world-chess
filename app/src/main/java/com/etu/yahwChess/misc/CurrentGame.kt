@@ -23,7 +23,6 @@ class CurrentGame(val boardView : GridLayout) {
     val boardViewHelper = BoardViewHelper(boardView)
     val pieceMover = PieceMover(this)
     val gameObserver = GameObserver(this)
-    val activity = MainActivity()
     var turn: Player = Player.WHITE
         private set
 
@@ -49,18 +48,17 @@ class CurrentGame(val boardView : GridLayout) {
         when (state) {        // TODO replace with soft check when it will be implemented
             GameState.BLACK_WINS -> {
                 Log.println(Log.INFO, "GameObserver", "Registered BLACK victory")
-                //activity.showWinnerAlert(state)
             }
             GameState.WHITE_WINS -> {
                 Log.println(Log.INFO, "GameObserver", "Registered WHITE victory")
-                //activity.showWinnerAlert(state)
             }
             GameState.DRAW -> Log.println(Log.INFO, "GameObserver", "Registered DRAW")
             else -> Log.println(Log.INFO, "GameObserver", "Game continues")
 
             // TODO some victory/draw visualisation
         }
-        //activity.showWinnerAlert(state)
+        //тут пукпукпук
+        // MainActivity().showWinnerAlert(boardView, state)
 
         Log.println(Log.INFO, "CurrentGame", "passed turn. Its $turn turn now")
     }

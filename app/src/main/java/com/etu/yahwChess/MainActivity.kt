@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
+import android.view.KeyEvent
 import android.widget.GridLayout
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -27,13 +27,15 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var boardLayout: ViewGroup
 
+    private lateinit var game: CurrentGame
+
     @OptIn(ExperimentalSerializationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        boardLayout = findViewById<GridLayout>(R.id.board)
 
-        val game = CurrentGame(boardLayout as GridLayout)
+        boardLayout = findViewById<GridLayout>(R.id.board)
+        game = CurrentGame(boardLayout as GridLayout)
 
         val bundle: Bundle = intent.extras!!
         val gameStart = bundle.getBoolean("game_start")
@@ -49,44 +51,42 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 game.boardContainer.emplacePiecesDefault()
             }
-        }
-        else {
-
+        } else {
             game.boardContainer.emplacePiecesDefault()
         }
 
+    }
 
-        //back to menu
-        val backButton: ImageButton = findViewById(R.id.back_button1)
+    override fun onBackPressed() {
+        val dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog_animation))
+        dialogBuilder
+            .setTitle("Back to menu")
+            .setMessage("Do you want to save your game?")
 
-        backButton.setOnClickListener {
-            val dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog_animation))
-            dialogBuilder
-                .setTitle("Back to menu")
-                .setMessage("Do you want to save your game?")
+            //save the game
+            .setPositiveButton("Save") { _, _ ->
+                Toast.makeText(
+                    applicationContext,
+                    "GAME SAVED", Toast.LENGTH_SHORT
+                ).show()
+                val output =
+                    applicationContext?.openFileOutput("savedData.json", Context.MODE_PRIVATE)
+                output?.write(game.serialize().toByteArray())
 
-                    //save the game
-                .setPositiveButton("Save") { _, _ ->
-                    Toast.makeText(
-                        applicationContext,
-                        "GAME SAVED", Toast.LENGTH_SHORT
-                    ).show()
-                    val output = applicationContext?.openFileOutput("savedData.json", Context.MODE_PRIVATE)
-                    output?.write(game.serialize().toByteArray())
+                openMenuActivity()
+                finish()
+            }
+            //don't save the game
+            .setNegativeButton("Don't save") { _, _ ->
+                Toast.makeText(
+                    applicationContext,
+                    "GAME NOT SAVED", Toast.LENGTH_SHORT
+                ).show()
 
-                    openMenuActivity()
-                }
-                    //don't save the game
-                .setNegativeButton("Don't save") { _, _ ->
-                    Toast.makeText(
-                        applicationContext,
-                        "GAME NOT SAVED", Toast.LENGTH_SHORT
-                    ).show()
-
-                    openMenuActivity()
-                }
-            dialogBuilder.show()
-        }
+                openMenuActivity()
+                finish()
+            }
+        dialogBuilder.show()
     }
 
     // open menu activity window
@@ -95,28 +95,44 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun showWinnerAlert(state: GameState) {
+    fun showWinnerAlert(view: View, state: GameState) {
+        val dialogBuilder = AlertDialog.Builder(ContextThemeWrapper(this, R.style.dialog_animation))
 
         when (state) {
             GameState.BLACK_WINS -> {
-                MaterialAlertDialogBuilder(this)
+                dialogBuilder
                     .setTitle("GAME OVER!")
                     .setMessage("Team BLACK won")
-                    .setPositiveButton("MENU") {_, _ -> openMenuActivity()}
+                    .setPositiveButton("MENU") { _, _ ->
+                        run {
+                            openMenuActivity()
+                            finish()
+                        }
+                    }
                     .show()
             }
             GameState.WHITE_WINS -> {
-                MaterialAlertDialogBuilder(this)
+                dialogBuilder
                     .setTitle("GAME OVER!")
                     .setMessage("Team WHITE won")
-                    .setPositiveButton("MENU") { _, _ -> openMenuActivity()}
+                    .setPositiveButton("MENU") { _, _ ->
+                        run {
+                            openMenuActivity()
+                            finish()
+                        }
+                    }
                     .show()
             }
-            GameState.DRAW-> {
-                MaterialAlertDialogBuilder(this)
+            GameState.DRAW -> {
+                dialogBuilder
                     .setTitle("GAME OVER!")
                     .setMessage("DRAW")
-                    .setPositiveButton("MENU") { _, _ -> openMenuActivity()}
+                    .setPositiveButton("MENU") { _, _ ->
+                        run {
+                            openMenuActivity()
+                            finish()
+                        }
+                    }
                     .show()
             }
         }
