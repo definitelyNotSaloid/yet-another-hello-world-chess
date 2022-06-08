@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         boardLayout = findViewById<GridLayout>(R.id.board)
-        game = CurrentGame(boardLayout as GridLayout)
+        game = CurrentGame(boardLayout as GridLayout, this)
 
         val bundle: Bundle = intent.extras!!
         val gameStart = bundle.getBoolean("game_start")

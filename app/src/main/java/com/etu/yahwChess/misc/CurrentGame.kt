@@ -18,7 +18,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
-class CurrentGame(val boardView : GridLayout) {
+class CurrentGame(val boardView : GridLayout, val mainActivity: MainActivity) {
     val boardContainer = BoardContainer(this)
     val boardViewHelper = BoardViewHelper(boardView)
     val pieceMover = PieceMover(this)
@@ -57,8 +57,7 @@ class CurrentGame(val boardView : GridLayout) {
 
             // TODO some victory/draw visualisation
         }
-        //тут пукпукпук
-        // MainActivity().showWinnerAlert(boardView, state)
+        mainActivity.showWinnerAlert(boardView, state)
 
         Log.println(Log.INFO, "CurrentGame", "passed turn. Its $turn turn now")
     }
