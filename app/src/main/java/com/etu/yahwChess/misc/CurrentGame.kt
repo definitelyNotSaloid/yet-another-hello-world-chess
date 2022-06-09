@@ -5,9 +5,11 @@ import android.util.Log
 import android.widget.GridLayout
 import androidx.core.view.children
 import com.etu.yahwChess.MainActivity
+import com.etu.yahwChess.R
 import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.model.board.pieceMover.PieceMover
 import com.etu.yahwChess.model.gameRules.GameObserver
+import com.etu.yahwChess.model.pieces.KingPiece
 import com.etu.yahwChess.model.pieces.PawnPiece
 import com.etu.yahwChess.model.pieces.Piece
 import com.etu.yahwChess.model.pieces.RookPiece
@@ -49,6 +51,11 @@ class CurrentGame(val boardView : GridLayout, val mainActivity: MainActivity) {
                 val piece = boardContainer[Vector2dInt(i,j)]
                 if (piece?.color == turn && piece is PawnPiece) {
                     piece.resetEnPassage()
+                }
+
+                else if (piece?.color != turn && piece is KingPiece && gameObserver.targetedBy(piece.position).any {it.color == turn}) {
+                    boardViewHelper.getCellView(vectorToCellIndex(piece.position))
+                        .setBackgroundResource(R.mipmap.king_in_danger)
                 }
             }
         }

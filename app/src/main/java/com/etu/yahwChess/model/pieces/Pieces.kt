@@ -492,10 +492,16 @@ class KingPiece : Piece {
         if (pos == this.position)
             return false
 
-        if (board.game.gameObserver.targetedBy(pos).any { it.color != this.color } )
+        val posThreats = board.game.gameObserver.targetedBy(pos).filter{ it.color != this.color }
+        val kingThreats = board.game.gameObserver.targetedBy(position).filter{ it.color != this.color }
+        if (posThreats.any())
             return false
 
-        if (pos == this.position + Vector2dInt.WEST * 2 || pos == this.position + Vector2dInt.EAST * 2) {
+        if (kingThreats.any {pos == this.position + this.position.straightOrDiagonalDirectionTo(it.position) * -1})
+            return false
+
+
+        if (!hasMoved && (pos == this.position + Vector2dInt.WEST * 2 || pos == this.position + Vector2dInt.EAST * 2)) {
             val direction = if (pos.x<this.position.x) Vector2dInt.WEST else Vector2dInt.EAST
             val observer = board.game.gameObserver
             if (observer.targetedBy(this.position+direction).any {it.color != color})
@@ -534,10 +540,11 @@ class KingPiece : Piece {
         )
 
         return sequence {
+            val threats = board.game.gameObserver.targetedBy(position).filter { it.color != color }
             for (potentialPos in positions) {
-
                 if (!board.game.gameObserver.targetedBy(potentialPos).any { it.color != color} &&
-                    potentialPos.withinRectangle(Vector2dInt(0, 0), Vector2dInt(7, 7))) {
+                    potentialPos.withinRectangle(Vector2dInt(0, 0), Vector2dInt(7, 7)) &&
+                    !threats.any {potentialPos == position + position.straightOrDiagonalDirectionTo(it.position) * -1}) {
                     if (board[potentialPos] == null || board[potentialPos]?.color != color)
                         yield(potentialPos)
                 }

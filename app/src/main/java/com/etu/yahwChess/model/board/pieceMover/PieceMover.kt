@@ -1,16 +1,13 @@
 package com.etu.yahwChess.model.board.pieceMover
 
-import android.text.BoringLayout
 import android.util.Log
-import android.widget.ImageView
 import com.etu.yahwChess.R
 import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.misc.vectorToCellIndex
-import com.etu.yahwChess.model.board.container.BoardContainer
+import com.etu.yahwChess.model.gameRules.HowBadThingsReallyAre
 import com.etu.yahwChess.model.pieces.KingPiece
 import com.etu.yahwChess.model.pieces.Piece
-import com.etu.yahwChess.model.pieces.PieceData
 
 class PieceMover(val game: CurrentGame) {
     private var piece: Piece? = null
@@ -35,7 +32,7 @@ class PieceMover(val game: CurrentGame) {
 
                 setBackgroundToPossibleMoves(piece, true)
                 setBackgroundToTouchedPiece(firstPieceTouchedPos, true)
-                setBackgroundToPossibleEatenPawn(piece)
+                setBackgroundToPossibleEatenPiece(piece)
 
                 Log.println(Log.INFO, "PieceMover", "taken piece at $pos")
             }
@@ -45,6 +42,12 @@ class PieceMover(val game: CurrentGame) {
 
                 setBackgroundToPossibleMoves(piece, false)
                 setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
+
+                if (game.gameObserver.checkmateState()!=HowBadThingsReallyAre.NO_THREAT) {
+                    val kingPos = game.gameObserver.kingOfColor(game.turn).position
+                    game.boardViewHelper.getCellView(vectorToCellIndex(kingPos))
+                        .setBackgroundResource(R.mipmap.king_in_danger)
+                }
 
                 piece = null
                 piecePos = Vector2dInt.OUT_OF_BOUNDS
@@ -59,7 +62,7 @@ class PieceMover(val game: CurrentGame) {
 
                 setBackgroundToPossibleMoves(firstPieceTouched, false)
                 setBackgroundToPossibleMoves(piece, true)
-                setBackgroundToPossibleEatenPawn(piece)
+                setBackgroundToPossibleEatenPiece(piece)
 
                 setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
                 setBackgroundToTouchedPiece(piecePos, true)
@@ -86,8 +89,6 @@ class PieceMover(val game: CurrentGame) {
                             .setBackgroundResource(R.mipmap.transparent_background)
                     }
                 }
-                if (piece?.position!=Vector2dInt.OUT_OF_BOUNDS)
-                    setBackgroundKingInDanger(piece)
 
                 Log.println(Log.INFO, "PieceMover", "released piece at $pos")
 
@@ -102,6 +103,12 @@ class PieceMover(val game: CurrentGame) {
             // Default case - invalid cell
             setBackgroundToPossibleMoves(piece, false)
             setBackgroundToTouchedPiece(firstPieceTouchedPos, false)
+
+            if (game.gameObserver.checkmateState()!=HowBadThingsReallyAre.NO_THREAT) {
+                val kingPos = game.gameObserver.kingOfColor(game.turn).position
+                game.boardViewHelper.getCellView(vectorToCellIndex(kingPos))
+                    .setBackgroundResource(R.mipmap.king_in_danger)
+            }
 
             Log.println(Log.INFO, "PieceMover", "released piece by clicking on invalid cell")
             piecePos = Vector2dInt(-1, -1)
@@ -137,7 +144,7 @@ class PieceMover(val game: CurrentGame) {
     }
 
     //highlight a pawn that can be eaten
-    private fun setBackgroundToPossibleEatenPawn(piece: Piece?) {
+    private fun setBackgroundToPossibleEatenPiece(piece: Piece?) {
             piece!!.possibleMoves().forEach {
                 if (boardContainer[it]?.color != piece.color && boardContainer[it] != null) {
                     game.boardViewHelper.getCellView(vectorToCellIndex(it))
@@ -146,13 +153,4 @@ class PieceMover(val game: CurrentGame) {
             }
     }
 
-    //highlight a king if it is in danger
-    private fun setBackgroundKingInDanger(piece: Piece?) {
-        piece!!.possibleMoves().forEach {
-            if (boardContainer[it]?.color != piece.color && boardContainer[it] is KingPiece) {
-                game.boardViewHelper.getCellView(vectorToCellIndex(it))
-                    .setBackgroundResource(R.mipmap.king_in_danger)
-            }
-        }
-    }
 }

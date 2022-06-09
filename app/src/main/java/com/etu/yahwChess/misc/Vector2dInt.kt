@@ -2,6 +2,7 @@ package com.etu.yahwChess.misc
 
 import android.util.Log
 import kotlinx.serialization.Serializable
+import kotlin.math.sign
 
 // used for coordinates mostly
 
@@ -45,5 +46,17 @@ data class Vector2dInt(val x: Int, val y: Int) {
                 && this.y in upperLeft.y..lowerRight.y
     }
 
+    fun straightOrDiagonalDirectionTo(other: Vector2dInt) : Vector2dInt {
+        val delta = other - this
+        var res = Vector2dInt(0,0)
+        if (delta.x!=0)
+            res = Vector2dInt(sign(delta.x.toDouble()).toInt(), res.y)
+
+        if (delta.y!=0)
+            res = Vector2dInt(res.x, sign(delta.y.toDouble()).toInt())
+
+        Log.println(Log.INFO, "vec2dint", "for $this and $other = $res")
+        return res
+    }
 
 }
