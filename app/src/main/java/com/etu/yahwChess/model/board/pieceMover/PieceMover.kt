@@ -8,6 +8,7 @@ import com.etu.yahwChess.misc.CurrentGame
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.misc.vectorToCellIndex
 import com.etu.yahwChess.model.board.container.BoardContainer
+import com.etu.yahwChess.model.pieces.KingPiece
 import com.etu.yahwChess.model.pieces.Piece
 import com.etu.yahwChess.model.pieces.PieceData
 
@@ -86,6 +87,7 @@ class PieceMover(val game: CurrentGame) {
                             .setBackgroundResource(R.mipmap.transparent_background)
                     }
                 }
+                setBackgroundKingInDanger(piece)
 
                 Log.println(Log.INFO, "PieceMover", "released piece at $pos")
 
@@ -142,5 +144,15 @@ class PieceMover(val game: CurrentGame) {
                         .setBackgroundResource(R.mipmap.eat)
                 }
             }
+    }
+
+    //highlight a king if it is in danger
+    private fun setBackgroundKingInDanger(piece: Piece?) {
+        piece!!.possibleMoves().forEach {
+            if (boardContainer[it]?.color != piece.color && boardContainer[it] is KingPiece) {
+                game.boardViewHelper.getCellView(vectorToCellIndex(it))
+                    .setBackgroundResource(R.mipmap.king_in_danger)
+            }
+        }
     }
 }
