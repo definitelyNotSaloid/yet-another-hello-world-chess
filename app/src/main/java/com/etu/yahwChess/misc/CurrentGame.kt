@@ -8,6 +8,7 @@ import com.etu.yahwChess.MainActivity
 import com.etu.yahwChess.model.board.container.BoardContainer
 import com.etu.yahwChess.model.board.pieceMover.PieceMover
 import com.etu.yahwChess.model.gameRules.GameObserver
+import com.etu.yahwChess.model.pieces.PawnPiece
 import com.etu.yahwChess.model.pieces.Piece
 import com.etu.yahwChess.model.pieces.RookPiece
 import com.etu.yahwChess.serialization.SerializableGameData
@@ -43,7 +44,19 @@ class CurrentGame(val boardView : GridLayout, val mainActivity: MainActivity) {
     // TODO move somewhere else (?)
     // this is a proxy class after all
     fun passTurn() {
+        for (i in 0..7) {
+            for (j in 0..7) {
+                val piece = boardContainer[Vector2dInt(i,j)]
+                if (piece?.color == turn && piece is PawnPiece) {
+                    piece.resetEnPassage()
+                }
+            }
+        }
+
+
         turn = if (turn == Player.WHITE) Player.BLACK else Player.WHITE
+
+
         state = gameObserver.hardVictoryCheck()
         when (state) {        // TODO replace with soft check when it will be implemented
             GameState.BLACK_WINS -> {

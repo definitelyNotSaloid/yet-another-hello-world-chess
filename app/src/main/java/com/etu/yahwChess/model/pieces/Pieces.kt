@@ -1,7 +1,6 @@
 package com.etu.yahwChess.model.pieces
 
 import android.util.Log
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
@@ -423,6 +422,7 @@ class KnightPiece : Piece {
         if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
             return sequence {  }
 
+
         val positions = listOf(
             Vector2dInt(2,1) + this.position,
             Vector2dInt(1,2) + this.position,
@@ -585,10 +585,19 @@ class PawnPiece : Piece {
         this.board = board
     }
 
+    private val enPassageEnemyPawnsPositions = mutableListOf<Vector2dInt>()
+    private val forwardDirection = if (color == Player.WHITE) Vector2dInt.NORTH else Vector2dInt.SOUTH
+    // funny enough, this list is always at 1 element max
+    // but damnt im too lazy to refactor
+
     private val deadEndY = if (color == Player.WHITE) 0 else 7
 
     override val pieceData: PieceData
         get() = PawnData
+
+    fun resetEnPassage() {
+        enPassageEnemyPawnsPositions.clear()
+    }
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
         if (position.y == deadEndY)
@@ -607,7 +616,7 @@ class PawnPiece : Piece {
         if (checkState == HowBadThingsReallyAre.ONLY_KING_CAN_MOVE)
             return sequence {  }
 
-        val forwardDirection = if (color == Player.WHITE) Vector2dInt.NORTH else Vector2dInt.SOUTH
+
         val diagonalShifts : List<Vector2dInt> =
             (if (color == Player.WHITE) {
                 listOf(
@@ -637,6 +646,11 @@ class PawnPiece : Piece {
                 )
                     yield(position + shift)
             }
+
+            for (enPas in enPassageEnemyPawnsPositions) {
+                if (board[enPas+forwardDirection]==null)
+                    yield(enPas+forwardDirection)
+            }
         }.filter {
             if (checkState == HowBadThingsReallyAre.CAN_COVER_KING_WITH_OTHER_PIECE) {
                 willCoverKingOrEliminateThreatPredicate(it)
@@ -653,6 +667,8 @@ class PawnPiece : Piece {
         if (position.y == deadEndY)
             return false
 
+        if (enPassageEnemyPawnsPositions.any { it+forwardDirection == pos} && board[pos]==null)
+            return true
 
         if (this.color == Player.WHITE) {
             // trying to take piece
@@ -679,6 +695,7 @@ class PawnPiece : Piece {
         }
 
         else {
+
             // trying to take piece
             if (pos == this.position + Vector2dInt.SOUTH + Vector2dInt.WEST
                 || pos == this.position + Vector2dInt.SOUTH + Vector2dInt.EAST) {
@@ -704,9 +721,32 @@ class PawnPiece : Piece {
     }
 
     override fun afterMoveToAction(newPos: Vector2dInt): () -> Unit {
-
+        val savedPos = position
         return fun() {
             super.afterMoveToAction(newPos).invoke()
+
+            if (abs(newPos.y - savedPos.y)==2) {
+                val positions = listOf(
+                    newPos+Vector2dInt.EAST,
+                    newPos+Vector2dInt.WEST
+                )
+
+                for (leftRight in positions) {
+                    if (board.isWithinBorders(leftRight)
+                        && board[leftRight] is PawnPiece
+                        && board[leftRight]?.color != color
+                    ) {
+                        val piece = board[leftRight] as PawnPiece
+                        Log.println(Log.INFO, "Pawn EnPassage", "Notified pawn at $leftRight about enPassage possibility")
+                        piece.enPassageEnemyPawnsPositions.add(newPos)
+                    }
+                }
+            }
+
+            if (enPassageEnemyPawnsPositions.any { it+forwardDirection == newPos}) {
+                board[newPos-forwardDirection]?.onTakenAction()
+                board[newPos-forwardDirection] = null
+            }
 
             if (newPos.y == deadEndY) {
                 board[newPos] = QueenPiece(board, color)
