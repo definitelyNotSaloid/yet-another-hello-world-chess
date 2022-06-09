@@ -199,8 +199,6 @@ class GameObserver(val game: CurrentGame) {
 
     fun kingThreatNullifiedByObstacleAt(cell: Vector2dInt, kingColor: Player) : Piece? {
         val piece = game.boardContainer[cell]
-        if (piece is KingPiece)
-            throw IllegalArgumentException("what?")
 
         val king = kingOfColor(kingColor)
 
