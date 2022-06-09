@@ -78,8 +78,7 @@ class PieceMover(val game: CurrentGame) {
             // Release piece by clicking on VALID cell
             // Turn ends here
             if (piece!!.canMoveTo(pos)) {
-                boardContainer[pos] = piece
-                boardContainer[piecePos] = null
+                boardContainer.move(piecePos,pos)
 
                 for (i in 0..7) {
                     for (j in 0..7) {

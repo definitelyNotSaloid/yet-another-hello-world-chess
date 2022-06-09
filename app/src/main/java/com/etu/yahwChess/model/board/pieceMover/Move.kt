@@ -24,8 +24,7 @@ class SinglePieceMove(
         require(board[from]!!.canMoveTo(to))
         { "move cant be applied to board (invalid move)" }
 
-        board[to] = board[from]
-        board[from] = null
+        board.move(from, to)
     }
 
 

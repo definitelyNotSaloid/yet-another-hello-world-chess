@@ -1,5 +1,7 @@
 package com.etu.yahwChess.model.pieces
 
+import android.util.Log
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.etu.yahwChess.misc.Player
 import com.etu.yahwChess.misc.Vector2dInt
 import com.etu.yahwChess.model.board.container.BoardContainer
@@ -15,6 +17,9 @@ import kotlin.math.abs
 sealed class Piece(
     private var prevRegisteredPos: Vector2dInt,
     val color: Player) {
+
+    var hasMoved = false
+        protected set
 
     @Transient
     lateinit var board: BoardContainer
@@ -95,6 +100,12 @@ sealed class Piece(
         return true
     }
 
+    open fun afterMoveToAction(newPos: Vector2dInt) : () -> Unit {
+        return {this.hasMoved = true}
+    }
+    open fun onTakenAction() : () -> Unit {
+        return {}
+    }
 }
 
 @Serializable
@@ -191,7 +202,6 @@ class RookPiece : Piece {
 
         return true
     }
-
 }
 
 @Serializable
@@ -471,9 +481,10 @@ class KingPiece : Piece {
     override val pieceData: PieceData
         get() = KingData
 
+
     override fun canMoveTo(pos: Vector2dInt): Boolean {
-        require(pos.withinRectangle(Vector2dInt(0,0), Vector2dInt(7,7)))
-        { "position $pos is out of board borders" }
+        if(!board.isWithinBorders(pos))
+            return false
 
         if (this.position == Vector2dInt.OUT_OF_BOUNDS)
             return false
@@ -481,11 +492,31 @@ class KingPiece : Piece {
         if (pos == this.position)
             return false
 
+        if (board.game.gameObserver.targetedBy(pos).any { it.color != this.color } )
+            return false
+
+        if (pos == this.position + Vector2dInt.WEST * 2 || pos == this.position + Vector2dInt.EAST * 2) {
+            val direction = if (pos.x<this.position.x) Vector2dInt.WEST else Vector2dInt.EAST
+            val observer = board.game.gameObserver
+            if (observer.targetedBy(this.position+direction).any {it.color != color})
+                return false
+
+            if (observer.targetedBy(this.position+direction * 2).any {it.color != color})
+                return false
+
+            val distToRook = if (direction==Vector2dInt.WEST) 4 else 3
+            if (board[this.position + direction*distToRook] is RookPiece &&
+                !board[this.position + direction*distToRook]!!.hasMoved &&
+                board[this.position + direction*distToRook]!!.canMoveTo(this.position+direction) ){
+                return true
+            }
+
+            return false
+        }
+
         if (abs(pos.x - this.position.x) >1 || abs(pos.y - this.position.y) >1)
             return false
 
-        if (board.game.gameObserver.targetedBy(pos).any { it.color != this.color } )
-            return false
 
         return true
     }
@@ -511,6 +542,38 @@ class KingPiece : Piece {
                         yield(potentialPos)
                 }
             }
+
+            if (canMoveTo(position + Vector2dInt.WEST*2))
+                yield(position + Vector2dInt.WEST*2)
+
+            if (canMoveTo(position + Vector2dInt.EAST*2))
+                yield(position + Vector2dInt.EAST*2)
+        }
+    }
+
+    override fun afterMoveToAction(newPos: Vector2dInt): () -> Unit {
+        val savedPos = position
+        return fun (){      // why. does. making. it. fun. fixes. returns.
+            super.afterMoveToAction(newPos).invoke()
+
+            val rookPos: Vector2dInt
+
+            val newRookPos: Vector2dInt
+
+            if (newPos == savedPos + Vector2dInt.EAST * 2) {
+                rookPos = Vector2dInt(7, savedPos.y)
+                newRookPos = newPos + Vector2dInt.WEST
+            } else if (newPos == savedPos + Vector2dInt.WEST * 2) {
+                rookPos = Vector2dInt(0, savedPos.y)
+                newRookPos = newPos + Vector2dInt.EAST
+            } else {
+                return
+            }
+            // move pieces directly to avoid canMoveTo check
+            val action = board[rookPos]!!.afterMoveToAction(newRookPos)
+            board[newRookPos] = board[rookPos]
+            board[rookPos] = null
+            action()
         }
     }
 }
@@ -522,10 +585,15 @@ class PawnPiece : Piece {
         this.board = board
     }
 
+    private val deadEndY = if (color == Player.WHITE) 0 else 7
+
     override val pieceData: PieceData
         get() = PawnData
 
     override fun possibleMoves(): Sequence<Vector2dInt> {
+        if (position.y == deadEndY)
+            return sequence {  }
+
         val threat = board.game.gameObserver.kingThreatNullifiedByObstacleAt(this.position, this.color)
         if (threat!=null) {
             if (canMoveTo(threat.position))
@@ -558,7 +626,7 @@ class PawnPiece : Piece {
         return sequence {
             if (board[position + forwardDirection] == null) {
                 yield(position + forwardDirection)
-                if (board[position + forwardDirection * 2] == null
+                if (board.isWithinBorders(position+forwardDirection * 2) && board[position + forwardDirection * 2] == null
                     && position.y == startingLine)     // at starting line
                     yield(position + forwardDirection * 2)
                 }
@@ -581,6 +649,10 @@ class PawnPiece : Piece {
     override fun canMoveTo(pos: Vector2dInt): Boolean {
         if (!super.canMoveTo(pos))
             return false
+
+        if (position.y == deadEndY)
+            return false
+
 
         if (this.color == Player.WHITE) {
             // trying to take piece
@@ -628,6 +700,17 @@ class PawnPiece : Piece {
             }
 
             return false
+        }
+    }
+
+    override fun afterMoveToAction(newPos: Vector2dInt): () -> Unit {
+
+        return fun() {
+            super.afterMoveToAction(newPos).invoke()
+
+            if (newPos.y == deadEndY) {
+                board[newPos] = QueenPiece(board, color)
+            }
         }
     }
 }

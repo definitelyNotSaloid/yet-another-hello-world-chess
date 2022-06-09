@@ -11,6 +11,7 @@ import com.etu.yahwChess.model.pieces.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.lang.IllegalArgumentException
 
 // Its just a data container
 // Any logic besides moving stuff should be implemented in PieceMover class
@@ -64,6 +65,22 @@ class BoardContainer(val game: CurrentGame) {
 
         this[Vector2dInt(4, 0)] = KingPiece(this, Player.BLACK)
         this[Vector2dInt(4, 7)] = KingPiece(this, Player.WHITE)
+    }
+
+    fun move(from: Vector2dInt, to: Vector2dInt) {
+        if (this[from]==null)
+            throw IllegalArgumentException("There is no piece at $from")
+
+        if (!this[from]!!.canMoveTo(to))
+            throw IllegalArgumentException("Illegal move")
+
+        val action = this[from]!!.afterMoveToAction(to)
+
+        this[to]?.onTakenAction()?.invoke()
+
+        this[to] = this[from]
+        this[from] = null
+        action()
     }
 
     fun loadFromSerialized(serialized: String) {
