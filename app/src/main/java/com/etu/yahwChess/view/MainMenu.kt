@@ -20,6 +20,7 @@ class MainMenu : AppCompatActivity() {
             intent = Intent(this, MainActivity::class.java)
             intent.putExtra("game_start", gameStart)
             startActivity(intent)
+            finish()
         }
 
         val loadGameButton: ImageButton = findViewById(R.id.loadGameBtn)
@@ -29,6 +30,7 @@ class MainMenu : AppCompatActivity() {
             intent = Intent(this, MainActivity::class.java)
             intent.putExtra("game_start", gameStart)
             startActivity(intent)
+            finish()
         }
     }
 
