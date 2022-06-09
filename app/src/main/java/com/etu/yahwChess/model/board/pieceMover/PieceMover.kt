@@ -86,7 +86,8 @@ class PieceMover(val game: CurrentGame) {
                             .setBackgroundResource(R.mipmap.transparent_background)
                     }
                 }
-                setBackgroundKingInDanger(piece)
+                if (piece?.position!=Vector2dInt.OUT_OF_BOUNDS)
+                    setBackgroundKingInDanger(piece)
 
                 Log.println(Log.INFO, "PieceMover", "released piece at $pos")
 
